@@ -1,6 +1,36 @@
 import XCTest
 
 final class EpiLoggUITests: XCTestCase {
+    func testProfileDisplaysPublicLinksAndVersion() {
+        let app = XCUIApplication()
+        app.launch()
+
+        if app.buttons["onboarding.start"].waitForExistence(timeout: 1) {
+            app.buttons["onboarding.start"].tap()
+            for _ in 0..<4 {
+                app.buttons["onboarding.next"].tap()
+            }
+            XCTAssertTrue(app.buttons["onboarding.finish"].exists)
+            app.buttons["onboarding.finish"].tap()
+        }
+
+        XCTAssertTrue(app.tabBars.buttons["Profil"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Profil"].tap()
+
+        let privacyPolicyLink = app.descendants(matching: .any)
+            .matching(identifier: "profile.privacyPolicy").firstMatch
+        let supportLink = app.descendants(matching: .any)
+            .matching(identifier: "profile.support").firstMatch
+        scrollTo(privacyPolicyLink, in: app)
+        XCTAssertTrue(privacyPolicyLink.exists)
+        XCTAssertEqual(privacyPolicyLink.label, "Personvernerklæring")
+        XCTAssertGreaterThanOrEqual(privacyPolicyLink.frame.height, 44)
+        XCTAssertTrue(supportLink.exists)
+        XCTAssertEqual(supportLink.label, "Support og kontakt")
+        XCTAssertGreaterThanOrEqual(supportLink.frame.height, 44)
+        XCTAssertTrue(app.staticTexts["profile.version"].exists)
+    }
+
     func testOnboardingLoggingEditingAndDeleting() {
         continueAfterFailure = false
         let app = XCUIApplication()
@@ -102,6 +132,14 @@ final class EpiLoggUITests: XCTestCase {
         app.buttons["seizure.save"].tap()
         XCTAssertTrue(app.buttons["seizure.add"].waitForExistence(timeout: 5))
         app.tabBars.buttons["Profil"].tap()
+        let privacyPolicyLink = app.descendants(matching: .any)
+            .matching(identifier: "profile.privacyPolicy").firstMatch
+        let supportLink = app.descendants(matching: .any)
+            .matching(identifier: "profile.support").firstMatch
+        scrollTo(privacyPolicyLink, in: app)
+        XCTAssertTrue(privacyPolicyLink.exists)
+        XCTAssertTrue(supportLink.exists)
+        XCTAssertTrue(app.staticTexts["profile.version"].exists)
         scrollTo(app.buttons["Parken"], in: app)
         XCTAssertTrue(app.buttons["Parken"].isSelected)
         XCTAssertFalse(app.buttons["Stua"].exists)

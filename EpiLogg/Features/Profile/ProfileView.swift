@@ -261,7 +261,33 @@ struct ProfileView: View {
             Text("Hvis du bruker Apples enhetsbackup, kan lokale appdata være med i sikkerhetskopien avhengig av innstillingene dine.")
                 .font(.caption)
                 .foregroundStyle(AppStyle.muted)
+            Divider()
+            Link(destination: AppLinks.privacyPolicy) {
+                Text("Personvernerklæring")
+                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+            }
+            .font(.subheadline.weight(.medium))
+            .tint(AppStyle.accent)
+            .accessibilityIdentifier("profile.privacyPolicy")
+            Link(destination: AppLinks.support) {
+                Text("Support og kontakt")
+                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+            }
+            .font(.subheadline.weight(.medium))
+            .tint(AppStyle.accent)
+            .accessibilityIdentifier("profile.support")
+            Text("Versjon \(appVersion)")
+                .font(.caption)
+                .foregroundStyle(AppStyle.muted)
+                .accessibilityIdentifier("profile.version")
         }
+    }
+
+    private var appVersion: String {
+        let info = Bundle.main.infoDictionary
+        let short = info?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        let build = info?["CFBundleVersion"] as? String ?? "1"
+        return "\(short) (\(build))"
     }
 
     private var dataActions: some View {
