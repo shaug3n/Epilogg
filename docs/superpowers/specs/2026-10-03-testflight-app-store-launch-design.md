@@ -89,6 +89,16 @@ Release-konfigurasjonen skal bruke riktig Apple Developer-team, automatisk eller
 
 ## Personvern, sikkerhet og support
 
+### Offentlig nettsted og kontakt
+
+Personvern- og supportinnhold publiseres som et statisk nettsted på Vercel uten analyseverktøy, informasjonskapsler, sporingsskript eller eksterne runtime-avhengigheter. De permanente adressene er:
+
+- `https://epilogg.haugentech.no/personvern`;
+- `https://epilogg.haugentech.no/support`;
+- `epilogg@haugentech.no` for support og personvernspørsmål.
+
+Vercel-prosjektet skal publisere bare innholdet i `Site/`. DNS for `epilogg.haugentech.no`, Vercel-tilkoblingen og e-postkontoen administreres manuelt uten at tokens eller innloggingsopplysninger lagres i kildekoden.
+
 ### Personvernerklæring
 
 En offentlig personvernerklæring skal forklare:

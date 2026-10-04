@@ -11,6 +11,29 @@ EXPECTED_ICONS = {
     "AppIcon-Dark.png",
     "AppIcon-Tinted.png",
 }
+PUBLIC_BASE_URL = "https://epilogg.haugentech.no"
+SUPPORT_EMAIL = "epilogg@haugentech.no"
+REQUIRED_SITE_TEXT = {
+    "Site/index.html": [
+        "EpiLogg",
+        f"{PUBLIC_BASE_URL}/personvern",
+        f"{PUBLIC_BASE_URL}/support",
+    ],
+    "Site/personvern/index.html": [
+        SUPPORT_EMAIL,
+        "lagres lokalt",
+        "Apple-sikkerhetskopi",
+        "JSON",
+        "slette",
+        "3. oktober 2026",
+    ],
+    "Site/support/index.html": [
+        SUPPORT_EMAIL,
+        "medisinske råd",
+        "nødtjenester",
+        f"{PUBLIC_BASE_URL}/personvern",
+    ],
+}
 
 
 def png_info(path: Path) -> tuple[int, int, int]:
@@ -38,11 +61,33 @@ def validate_brand() -> None:
     assert icon_document["groups"], "Icon Composer source has no imported layers"
 
 
+def validate_site() -> None:
+    site_text = []
+    for relative, phrases in REQUIRED_SITE_TEXT.items():
+        text = (ROOT / relative).read_text()
+        site_text.append(text)
+        for phrase in phrases:
+            assert phrase.casefold() in text.casefold(), f"{relative} missing {phrase!r}"
+
+    assert (ROOT / "Site/styles.css").exists()
+    vercel = json.loads((ROOT / "Site/vercel.json").read_text())
+    assert vercel.get("cleanUrls") is True
+    assert vercel.get("trailingSlash") is False
+
+    combined_html = "\n".join(site_text).casefold()
+    assert "<script" not in combined_html, "site must not load scripts or trackers"
+    assert "support@epilogg.no" not in combined_html
+    assert "https://epilogg.no" not in combined_html
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--brand", action="store_true")
+    parser.add_argument("--site", action="store_true")
     args = parser.parse_args()
     if args.brand:
         validate_brand()
+    elif args.site:
+        validate_site()
     else:
         parser.error("select a validation group")

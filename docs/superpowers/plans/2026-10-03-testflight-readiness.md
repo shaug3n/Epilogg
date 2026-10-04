@@ -6,7 +6,7 @@
 
 **Architecture:** Keep the iOS app local-first and dependency-free. Add generated brand assets and compile them through the existing Xcode target, expose immutable public URLs through a small `AppLinks` type, host privacy/support content as a separate static site, and keep App Store Connect actions as explicit manual gates with saved evidence. The plan ends at a completed external TestFlight round; App Store submission remains a separate approved phase.
 
-**Tech Stack:** SwiftUI, SwiftData, XCTest/XCUITest, Xcode 27 stable with iOS 26 SDK or later, Swift/AppKit asset-generation script, static HTML/CSS, GitHub Pages with a custom `.no` domain, App Store Connect/TestFlight.
+**Tech Stack:** SwiftUI, SwiftData, XCTest/XCUITest, Xcode 27 stable with iOS 26 SDK or later, Swift/AppKit asset-generation script, static HTML/CSS hosted by Vercel on a `haugentech.no` subdomain, App Store Connect/TestFlight.
 
 **Spec:** `docs/superpowers/specs/2026-10-03-testflight-app-store-launch-design.md`
 
@@ -20,8 +20,8 @@
 - Target remains iPhone-only (`TARGETED_DEVICE_FAMILY = 1`).
 - No account, backend, analytics, advertising, crash-reporting SDK, cloud synchronization, or third-party runtime dependency.
 - Health/profile data remains on device and is never sent to the developer.
-- Public URLs are exactly `https://epilogg.no/personvern` and `https://epilogg.no/support`.
-- Support address is exactly `support@epilogg.no`.
+- Public URLs are exactly `https://epilogg.haugentech.no/personvern` and `https://epilogg.haugentech.no/support`.
+- Support address is exactly `epilogg@haugentech.no`.
 - App copy must not claim diagnosis, treatment, seizure detection, emergency notification, or medical advice.
 - Use fictitious health information in all testing and distribution material.
 - External TestFlight precedes App Store submission; App Store publication is out of scope for this plan.
@@ -45,7 +45,7 @@
 - `Site/personvern/index.html` — Norwegian privacy policy.
 - `Site/support/index.html` — Norwegian support page.
 - `Site/styles.css` — shared accessible site styles.
-- `Site/CNAME` — GitHub Pages custom-domain declaration.
+- `Site/vercel.json` — Vercel routing and security-header configuration.
 - `Distribution/TestFlight/nb-NO/beta-description.txt` — external beta description.
 - `Distribution/TestFlight/nb-NO/what-to-test.txt` — tester instructions.
 - `Distribution/TestFlight/nb-NO/review-notes.md` — Beta App Review walkthrough.
@@ -69,78 +69,71 @@
 
 ---
 
-### Task 1: Register the Public Domain and Support Channel
+### Task 1: Configure the Public Subdomain and Support Channel
 
 **Files:**
 - No repository files in this task.
 - Record evidence in the current session, not in source control.
 
 **Interfaces:**
-- Produces: active `epilogg.no` domain, working `support@epilogg.no` mailbox, and permission to publish `Site/` through a dedicated public GitHub Pages repository named `epilogg-site`.
+- Produces: active `epilogg.haugentech.no` subdomain, working `epilogg@haugentech.no` mailbox, and a Vercel project that publishes only `Site/`.
 - Consumes: none.
 
-- [ ] **Step 1: Check domain availability without purchasing an alternative**
+- [ ] **Step 1: Confirm control of the parent domain**
 
-Open a `.no` registrar and search for exactly `epilogg.no`.
+Confirm that the product owner controls DNS for `haugentech.no` and can create the exact subdomain `epilogg.haugentech.no`.
 
 Expected:
-- If available, continue.
-- If unavailable, stop this plan and ask the product owner to approve a new domain. Do not silently substitute another TLD or spelling.
+- DNS access is available;
+- the parent domain remains active and renewed;
+- no DNS-provider credentials or tokens are committed to the repository.
 
-- [ ] **Step 2: Register the domain**
+- [ ] **Step 2: Create the support mailbox**
 
-Register `epilogg.no` to the same legal owner used for the Apple Developer account. Enable renewal and account MFA.
+Create `epilogg@haugentech.no`, enable MFA for the mailbox administrator, and send a message to it from an unrelated address.
 
-Expected evidence:
-- registrar confirmation showing `epilogg.no`;
-- expiration/renewal date;
-- no credentials or registrar tokens committed to the repository.
-
-- [ ] **Step 3: Create the support mailbox**
-
-Create `support@epilogg.no`, enable MFA for the mailbox administrator, and send a message to it from an unrelated address.
-
-Reply from `support@epilogg.no`.
+Reply from `epilogg@haugentech.no`.
 
 Expected:
 - inbound and outbound delivery both succeed;
 - sender name is `EpiLogg support`;
 - no forwarding rule exposes health information to an unapproved third party.
 
-- [ ] **Step 4: Create the public static-site repository**
+- [ ] **Step 3: Create the Vercel project**
 
-Create a separate **public** GitHub repository named `epilogg-site`. Do not make the application source repository public.
+Create a Vercel project for the static site. Connect it to a repository that contains only public site content, or deploy only the `Site/` directory. Do not expose the private application source.
 
 Expected:
 - only the contents of `Site/` will be published;
-- GitHub Pages source is the repository root on `main`;
-- custom domain is `epilogg.no`;
-- HTTPS enforcement is enabled after DNS is valid.
+- the Vercel project root is `Site/`;
+- framework preset is `Other`, with no build command required;
+- production branch is `main`;
+- no analytics, audience insights or third-party integrations are enabled.
 
-- [ ] **Step 5: Configure DNS**
+- [ ] **Step 4: Configure the custom subdomain**
 
-Configure the registrar according to the current GitHub Pages custom-domain instructions. Add the required apex records for `epilogg.no` and verify the domain in GitHub before publishing.
+Add `epilogg.haugentech.no` as the production domain in Vercel. Create the CNAME record requested by Vercel at the DNS provider for `haugentech.no`.
 
 Run after propagation:
 
 ```bash
-curl -I https://epilogg.no
+curl -I https://epilogg.haugentech.no
 ```
 
-Expected before site content exists: a valid TLS response from the configured Pages host; `curl` must not report a certificate-name mismatch.
+Expected before site content exists: a valid TLS response from Vercel; `curl` must not report a certificate-name mismatch.
 
-- [ ] **Step 6: Record the manual gate**
+- [ ] **Step 5: Record the manual gate**
 
 In the session checklist, record:
 
 ```text
-Domain: epilogg.no
-Support: support@epilogg.no inbound/outbound verified
-Hosting: dedicated public epilogg-site repository
+Domain: epilogg.haugentech.no
+Support: epilogg@haugentech.no inbound/outbound verified
+Hosting: Vercel project with Site/ as project root
 HTTPS: valid
 ```
 
-Do not commit registrar receipts, account identifiers, DNS provider tokens, or mailbox credentials.
+Do not commit DNS-provider receipts, account identifiers, Vercel tokens, or mailbox credentials.
 
 ---
 
@@ -416,12 +409,12 @@ git commit -m "feat: add EpiLogg brand assets"
 - Create: `Site/personvern/index.html`
 - Create: `Site/support/index.html`
 - Create: `Site/styles.css`
-- Create: `Site/CNAME`
+- Create: `Site/vercel.json`
 - Modify: `Scripts/validate_distribution.py`
 - Create: `Distribution/AppPrivacy.md`
 
 **Interfaces:**
-- Produces: live `https://epilogg.no/personvern`, live `https://epilogg.no/support`, and `python3 Scripts/validate_distribution.py --site`.
+- Produces: live `https://epilogg.haugentech.no/personvern`, live `https://epilogg.haugentech.no/support`, and `python3 Scripts/validate_distribution.py --site`.
 - Consumes: verified domain and mailbox from Task 1.
 
 - [ ] **Step 1: Add failing static-site validation**
@@ -429,9 +422,16 @@ git commit -m "feat: add EpiLogg brand assets"
 Extend `Scripts/validate_distribution.py`:
 
 ```python
+PUBLIC_BASE_URL = "https://epilogg.haugentech.no"
+SUPPORT_EMAIL = "epilogg@haugentech.no"
 REQUIRED_SITE_TEXT = {
+    "Site/index.html": [
+        "EpiLogg",
+        f"{PUBLIC_BASE_URL}/personvern",
+        f"{PUBLIC_BASE_URL}/support",
+    ],
     "Site/personvern/index.html": [
-        "support@epilogg.no",
+        SUPPORT_EMAIL,
         "lagres lokalt",
         "Apple-sikkerhetskopi",
         "JSON",
@@ -439,20 +439,30 @@ REQUIRED_SITE_TEXT = {
         "3. oktober 2026",
     ],
     "Site/support/index.html": [
-        "support@epilogg.no",
+        SUPPORT_EMAIL,
         "medisinske råd",
         "nødtjenester",
-        "/personvern",
+        f"{PUBLIC_BASE_URL}/personvern",
     ],
 }
 
 def validate_site() -> None:
+    site_text = []
     for relative, phrases in REQUIRED_SITE_TEXT.items():
         text = (ROOT / relative).read_text()
+        site_text.append(text)
         for phrase in phrases:
             assert phrase.casefold() in text.casefold(), f"{relative} missing {phrase!r}"
+
     assert (ROOT / "Site/styles.css").exists()
-    assert (ROOT / "Site/CNAME").read_text().strip() == "epilogg.no"
+    vercel = json.loads((ROOT / "Site/vercel.json").read_text())
+    assert vercel.get("cleanUrls") is True
+    assert vercel.get("trailingSlash") is False
+
+    combined_html = "\n".join(site_text).casefold()
+    assert "<script" not in combined_html
+    assert "support@epilogg.no" not in combined_html
+    assert "https://epilogg.no" not in combined_html
 ```
 
 Add `--site` to the argument parser and call `validate_site()`.
@@ -499,14 +509,14 @@ EpiLogg sender ikke profil-, medisin-, steds- eller anfallsopplysninger til utvi
 
 Explain that an exported JSON file is controlled by the user after export and is not encrypted by EpiLogg.
 
-Use `3. oktober 2026` as the initial update date and `support@epilogg.no` as contact.
+Use `3. oktober 2026` as the initial update date and `epilogg@haugentech.no` as contact.
 
 - [ ] **Step 5: Write the support page**
 
 Create `Site/support/index.html` in Norwegian with:
 
 - onboarding, logging, editing, export, and delete-all instructions;
-- `mailto:support@epilogg.no`;
+- `mailto:epilogg@haugentech.no`;
 - statement that support email must not contain sensitive health information;
 - statement that EpiLogg does not give medical advice or monitor emergencies;
 - instruction to contact local emergency services for an acute emergency;
@@ -516,13 +526,9 @@ Create `Site/support/index.html` in Norwegian with:
 
 Create `Site/index.html` with the approved wordmark, one paragraph describing a local personal seizure diary, and links to `/support` and `/personvern`. Do not add download badges before an App Store listing exists.
 
-- [ ] **Step 7: Declare the custom domain**
+- [ ] **Step 7: Configure Vercel routing and security headers**
 
-Create `Site/CNAME` with exactly:
-
-```text
-epilogg.no
-```
+Create `Site/vercel.json` with clean URLs, no trailing slash, and site-wide headers for Content Security Policy, Referrer Policy and `X-Content-Type-Options`. The CSP must disallow scripts, forms and framing.
 
 - [ ] **Step 8: Document App Privacy answers**
 
@@ -562,21 +568,21 @@ python3 -m http.server 8080 --directory Site
 Then run:
 
 ```bash
-curl -fsS http://127.0.0.1:8080/personvern/ | grep -F "support@epilogg.no"
+curl -fsS http://127.0.0.1:8080/personvern/ | grep -F "epilogg@haugentech.no"
 curl -fsS http://127.0.0.1:8080/support/ | grep -F "/personvern"
 ```
 
 Expected: both commands print a matching line. Stop the HTTP server with `kill <recorded-pid>`; do not use `pkill` or `killall`.
 
-- [ ] **Step 11: Publish the static site**
+- [ ] **Step 11: Publish the static site to Vercel**
 
-Copy only `Site/` into the dedicated `epilogg-site` public repository, commit, and push. Do not add the private app source as a remote of that public repository.
+Publish only `Site/` through the dedicated Vercel project. Set the project root to `Site/`, add `epilogg.haugentech.no` as the production domain, and create the DNS record requested by Vercel. Do not expose the private app source or add credentials to source control.
 
 Verify:
 
 ```bash
-curl -fsS https://epilogg.no/personvern | grep -F "support@epilogg.no"
-curl -fsS https://epilogg.no/support | grep -F "medisinske råd"
+curl -fsS https://epilogg.haugentech.no/personvern | grep -F "epilogg@haugentech.no"
+curl -fsS https://epilogg.haugentech.no/support | grep -F "medisinske råd"
 ```
 
 Expected: both commands exit 0 over HTTPS.
@@ -615,9 +621,9 @@ import XCTest
 
 final class AppLinksTests: XCTestCase {
     func testPublicLinksUseApprovedSecureURLs() {
-        XCTAssertEqual(AppLinks.privacyPolicy.absoluteString, "https://epilogg.no/personvern")
-        XCTAssertEqual(AppLinks.support.absoluteString, "https://epilogg.no/support")
-        XCTAssertEqual(AppLinks.supportEmail, "support@epilogg.no")
+        XCTAssertEqual(AppLinks.privacyPolicy.absoluteString, "https://epilogg.haugentech.no/personvern")
+        XCTAssertEqual(AppLinks.support.absoluteString, "https://epilogg.haugentech.no/support")
+        XCTAssertEqual(AppLinks.supportEmail, "epilogg@haugentech.no")
         XCTAssertEqual(AppLinks.privacyPolicy.scheme, "https")
         XCTAssertEqual(AppLinks.support.scheme, "https")
     }
@@ -649,9 +655,9 @@ Create `EpiLogg/Domain/AppLinks.swift`:
 import Foundation
 
 enum AppLinks {
-    static let privacyPolicy = URL(string: "https://epilogg.no/personvern")!
-    static let support = URL(string: "https://epilogg.no/support")!
-    static let supportEmail = "support@epilogg.no"
+    static let privacyPolicy = URL(string: "https://epilogg.haugentech.no/personvern")!
+    static let support = URL(string: "https://epilogg.haugentech.no/support")!
+    static let supportEmail = "epilogg@haugentech.no"
 }
 ```
 
@@ -832,7 +838,7 @@ Test gjerne:
 • stor tekst og VoiceOver
 • at data beholdes etter oppdatering til neste betabygg
 
-EpiLogg oppdager ikke anfall, varsler ikke andre og gir ikke medisinske råd. Send tekniske tilbakemeldinger til support@epilogg.no uten sensitive helseopplysninger.
+EpiLogg oppdager ikke anfall, varsler ikke andre og gir ikke medisinske råd. Send tekniske tilbakemeldinger til epilogg@haugentech.no uten sensitive helseopplysninger.
 ```
 
 - [ ] **Step 6: Write Beta App Review notes**
@@ -848,7 +854,7 @@ Create `Distribution/TestFlight/nb-NO/review-notes.md` with:
 - all sample data is fictitious;
 - app is offline and does not provide medical advice;
 - support URL and privacy URL;
-- contact address `support@epilogg.no`.
+- contact address `epilogg@haugentech.no`.
 
 Include the exact phrase `Ingen innlogging er nødvendig`.
 
@@ -1066,8 +1072,8 @@ If `EpiLogg` is unavailable, stop and request naming approval; do not append pun
 
 Enter:
 
-- Privacy Policy URL: `https://epilogg.no/personvern`
-- Support URL: `https://epilogg.no/support`
+- Privacy Policy URL: `https://epilogg.haugentech.no/personvern`
+- Support URL: `https://epilogg.haugentech.no/support`
 - App Privacy: **No, we do not collect data from this app**
 
 Cross-check every answer with `Distribution/AppPrivacy.md`.
@@ -1132,7 +1138,7 @@ Paste:
 - beta description from `beta-description.txt`;
 - test instructions from `what-to-test.txt`;
 - review notes from `review-notes.md`;
-- feedback address `support@epilogg.no`.
+- feedback address `epilogg@haugentech.no`.
 
 - [ ] **Step 2: Submit build 1 for Beta App Review**
 

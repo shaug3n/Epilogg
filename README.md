@@ -34,6 +34,17 @@ swift Scripts/generate_brand_assets.swift
 python3 Scripts/validate_distribution.py --brand
 ```
 
+## Offentlig informasjonsside
+
+`Site/` inneholder den statiske landingssiden, personvernerklæringen og supportsiden for `https://epilogg.haugentech.no`. Vercel-prosjektet skal bruke `Site/` som prosjektrot og krever ingen byggekommando.
+
+```sh
+python3 Scripts/validate_distribution.py --site
+python3 -m http.server 8080 --directory Site
+```
+
+Nettstedet bruker ikke skript, analyseverktøy, informasjonskapsler eller eksterne ressurser. Offentlig kontaktadresse er `epilogg@haugentech.no`.
+
 ## Innhold
 
 - Fem steg i onboardingen, med valgfrie opplysninger om diagnose, medisiner, mulige triggere og egne steder.
