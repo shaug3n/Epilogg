@@ -5,8 +5,11 @@ final class EpiLoggUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        if app.buttons["onboarding.start"].waitForExistence(timeout: 1) {
-            app.buttons["onboarding.start"].tap()
+        let onboardingStart = app.buttons["onboarding.start"]
+        let profileTab = app.tabBars.buttons["Profil"]
+        let createdProfile = onboardingStart.waitForExistence(timeout: 5)
+        if createdProfile {
+            onboardingStart.tap()
             for _ in 0..<4 {
                 app.buttons["onboarding.next"].tap()
             }
@@ -14,8 +17,8 @@ final class EpiLoggUITests: XCTestCase {
             app.buttons["onboarding.finish"].tap()
         }
 
-        XCTAssertTrue(app.tabBars.buttons["Profil"].waitForExistence(timeout: 5))
-        app.tabBars.buttons["Profil"].tap()
+        XCTAssertTrue(profileTab.waitForExistence(timeout: 5))
+        profileTab.tap()
 
         let privacyPolicyLink = app.descendants(matching: .any)
             .matching(identifier: "profile.privacyPolicy").firstMatch
@@ -28,7 +31,16 @@ final class EpiLoggUITests: XCTestCase {
         XCTAssertTrue(supportLink.exists)
         XCTAssertEqual(supportLink.label, "Support og kontakt")
         XCTAssertGreaterThanOrEqual(supportLink.frame.height, 44)
-        XCTAssertTrue(app.staticTexts["profile.version"].exists)
+        let version = app.staticTexts["profile.version"]
+        XCTAssertTrue(version.exists)
+        XCTAssertNotNil(version.label.range(of: #"^Versjon \d+\.\d+\.\d+ \(\d+\)$"#, options: .regularExpression))
+
+        if createdProfile {
+            scrollTo(app.buttons["profile.deleteAll"], in: app)
+            app.buttons["profile.deleteAll"].tap()
+            app.sheets.buttons["Slett alle data"].tap()
+            XCTAssertTrue(onboardingStart.waitForExistence(timeout: 5))
+        }
     }
 
     func testOnboardingLoggingEditingAndDeleting() {
@@ -132,6 +144,10 @@ final class EpiLoggUITests: XCTestCase {
         app.buttons["seizure.save"].tap()
         XCTAssertTrue(app.buttons["seizure.add"].waitForExistence(timeout: 5))
         app.tabBars.buttons["Profil"].tap()
+        scrollTo(app.buttons["Parken"], in: app)
+        XCTAssertTrue(app.buttons["Parken"].isSelected)
+        XCTAssertFalse(app.buttons["Stua"].exists)
+        app.buttons["profile.savePlaces"].tap()
         let privacyPolicyLink = app.descendants(matching: .any)
             .matching(identifier: "profile.privacyPolicy").firstMatch
         let supportLink = app.descendants(matching: .any)
@@ -140,10 +156,6 @@ final class EpiLoggUITests: XCTestCase {
         XCTAssertTrue(privacyPolicyLink.exists)
         XCTAssertTrue(supportLink.exists)
         XCTAssertTrue(app.staticTexts["profile.version"].exists)
-        scrollTo(app.buttons["Parken"], in: app)
-        XCTAssertTrue(app.buttons["Parken"].isSelected)
-        XCTAssertFalse(app.buttons["Stua"].exists)
-        app.buttons["profile.savePlaces"].tap()
         app.tabBars.buttons["Logg"].tap()
         app.buttons.matching(identifier: "seizure.row").firstMatch.tap()
         XCTAssertTrue(app.descendants(matching: .any)["seizure.detail.Sted"].waitForExistence(timeout: 5))
