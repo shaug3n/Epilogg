@@ -45,6 +45,19 @@ python3 -m http.server 8080 --directory Site
 
 Nettstedet bruker ikke skript, analyseverktøy, informasjonskapsler eller eksterne ressurser. Offentlig kontaktadresse er `epilogg@haugentech.no`.
 
+## TestFlight-forberedelser
+
+Versjon og buildnummer valideres sammen med TestFlight-beskrivelsen, testinstruksjonene, Beta App Review-notatene og eksportinnstillingene:
+
+```sh
+python3 Scripts/validate_distribution.py --brand
+python3 Scripts/validate_distribution.py --site
+python3 Scripts/validate_distribution.py --release
+plutil -lint Distribution/ExportOptions.plist EpiLogg/Info.plist EpiLogg/PrivacyInfo.xcprivacy
+```
+
+Bruk `Distribution/ReleaseChecklist.md` for fysisk enhetstesting og App Store Connect-gjennomgang. Ikke legg opplastingslegitimasjon, signeringshemmeligheter, provisioning-profiler eller arkivfiler i Git.
+
 ## Innhold
 
 - Fem steg i onboardingen, med valgfrie opplysninger om diagnose, medisiner, mulige triggere og egne steder.

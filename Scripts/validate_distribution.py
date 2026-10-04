@@ -13,6 +13,10 @@ EXPECTED_ICONS = {
 }
 PUBLIC_BASE_URL = "https://epilogg.haugentech.no"
 SUPPORT_EMAIL = "epilogg@haugentech.no"
+LIMITS = {
+    "Distribution/TestFlight/nb-NO/beta-description.txt": 4000,
+    "Distribution/TestFlight/nb-NO/what-to-test.txt": 4000,
+}
 REQUIRED_SITE_TEXT = {
     "Site/index.html": [
         "EpiLogg",
@@ -80,14 +84,34 @@ def validate_site() -> None:
     assert "https://epilogg.no" not in combined_html
 
 
+def validate_release() -> None:
+    project = (ROOT / "EpiLogg.xcodeproj/project.pbxproj").read_text()
+    assert project.count("MARKETING_VERSION = 1.0.0;") == 2
+    assert project.count("CURRENT_PROJECT_VERSION = 1;") >= 2
+    assert project.count("ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;") == 2
+    for relative, limit in LIMITS.items():
+        text = (ROOT / relative).read_text().strip()
+        assert text, f"{relative} is empty"
+        assert len(text) <= limit, f"{relative} exceeds {limit} characters"
+    notes = (ROOT / "Distribution/TestFlight/nb-NO/review-notes.md").read_text()
+    for phrase in ("Ingen innlogging", "fiktive", "Slett alle data"):
+        assert phrase.casefold() in notes.casefold(), f"review notes missing {phrase!r}"
+    privacy = (ROOT / "EpiLogg/PrivacyInfo.xcprivacy").read_text()
+    assert "<false/>" in privacy
+    assert "<key>NSPrivacyCollectedDataTypes</key><array/>" in privacy
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--brand", action="store_true")
     parser.add_argument("--site", action="store_true")
+    parser.add_argument("--release", action="store_true")
     args = parser.parse_args()
     if args.brand:
         validate_brand()
     elif args.site:
         validate_site()
+    elif args.release:
+        validate_release()
     else:
         parser.error("select a validation group")

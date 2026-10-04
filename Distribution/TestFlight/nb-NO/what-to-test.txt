@@ -1,0 +1,13 @@
+Bruk bare fiktive opplysninger.
+
+Test gjerne:
+• onboarding med og uten medisiner
+• registrering, redigering og sletting av anfall
+• egne triggere og lagrede steder
+• 7, 30 og 90 dager samt egendefinert periode
+• JSON-eksport og «Slett alle data»
+• stor tekst og VoiceOver
+• at data beholdes etter oppdatering til neste betabygg
+• at personvern- og supportlenkene åpner de offentlige sidene
+
+EpiLogg oppdager ikke anfall, varsler ikke andre og gir ikke medisinske råd. Send tekniske tilbakemeldinger til epilogg@haugentech.no uten sensitive helseopplysninger.

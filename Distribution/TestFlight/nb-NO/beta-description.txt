@@ -1,0 +1,3 @@
+EpiLogg er en norsk, personlig anfallsdagbok for iPhone. Opplysninger om anfall, medisiner, mulige triggere og steder lagres lokalt på enheten. Appen krever ingen konto og gir ikke medisinske råd, diagnostikk eller anfallsvarsling.
+
+Denne betaen brukes til å kontrollere registrering, historikk, beskrivende statistikk, eksport, sletting og tilgjengelighet før en eventuell App Store-lansering. Bruk bare fiktive opplysninger under testingen.
