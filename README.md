@@ -25,6 +25,15 @@ Kjernefunksjonene og beregningene har enhets­tester, inkludert oppgradering av 
 
 En egen UI-regresjonstest kontrollerer at tomme eller delvis utfylte medisiner med manglende navn stopper både «Fortsett» og «Hopp over» på medisinsiden. Den tester også flere medisiner, retting og fjerning, samt at opplysninger beholdes når brukeren går tilbake.
 
+## Merkevarefiler
+
+Appikonet bruker den godkjente retningen **Bokmerket**. `Brand/AppIcon.icon` er den redigerbare Icon Composer-kilden, mens PNG-filene i asset-katalogen genereres deterministisk fra Swift-skriptet og skal ikke redigeres separat.
+
+```sh
+swift Scripts/generate_brand_assets.swift
+python3 Scripts/validate_distribution.py --brand
+```
+
 ## Innhold
 
 - Fem steg i onboardingen, med valgfrie opplysninger om diagnose, medisiner, mulige triggere og egne steder.

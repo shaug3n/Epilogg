@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="title description">
+  <title id="title">EpiLogg</title>
+  <desc id="description">En åpen dagbok med et ferskenfarget bokmerke ved siden av navnet EpiLogg.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2F5361"/>
+      <stop offset="1" stop-color="#182F3A"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(24 24) scale(1.62)">
+    <rect width="168" height="168" rx="39" fill="url(#background)"/>
+    <path d="M44 44C60 40 73 46 84 55V124C73 114 60 111 44 115V44Z" fill="#FFFFFF"/>
+    <path d="M124 44C108 40 95 46 84 55V124C95 114 108 111 124 115V44Z" fill="#E5F0EC"/>
+    <path d="M101 43V82L111 75L121 82V44C114 42 107 42 101 43Z" fill="#F3CBB5"/>
+    <path d="M56 65H70M56 84H70M98 99H112" fill="none" stroke="#4A8077" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <text x="350" y="178" fill="#243D50" font-family="-apple-system, 'SF Pro Rounded', 'Arial Rounded MT Bold', sans-serif" font-size="112" font-weight="700" letter-spacing="-4">EpiLogg</text>
+  <text x="356" y="228" fill="#4A8077" font-family="-apple-system, 'SF Pro Text', Arial, sans-serif" font-size="25" font-weight="600" letter-spacing="3">DIN PERSONLIGE ANFALLSDAGBOK</text>
+</svg>

@@ -1,0 +1,44 @@
+{
+  "fill" : {
+    "automatic-gradient" : "extended-srgb:0.09412,0.18431,0.22745,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "Bookmark.svg",
+          "name" : "Bookmark"
+        },
+        {
+          "image-name" : "PageLines.svg",
+          "name" : "PageLines"
+        },
+        {
+          "image-name" : "RightPage.svg",
+          "name" : "RightPage"
+        },
+        {
+          "image-name" : "LeftPage.svg",
+          "name" : "LeftPage"
+        },
+        {
+          "image-name" : "Background.svg",
+          "name" : "Background"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.3
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : [
+      "iOS"
+    ]
+  }
+}
