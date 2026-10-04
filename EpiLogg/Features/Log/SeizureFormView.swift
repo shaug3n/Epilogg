@@ -91,16 +91,20 @@ struct SeizureFormView: View {
                             .foregroundStyle(AppStyle.muted)
                     }
 
+                    Card {
+                        SectionTitle(title: "Mulige triggere")
+                        Text("Valgfritt. Sammenfall betyr ikke nødvendigvis at noe er årsaken.")
+                            .font(.caption)
+                            .foregroundStyle(AppStyle.muted)
+                        TriggerSelector(
+                            customTriggers: profiles.first?.triggers ?? [],
+                            selection: $draft.triggers,
+                            onAddCustom: { draft.newCustomTriggers.append($0) }
+                        )
+                    }
+
                     DisclosureGroup(isExpanded: $detailsExpanded) {
                         VStack(alignment: .leading, spacing: 20) {
-                            VStack(alignment: .leading, spacing: 10) {
-                                SectionTitle(title: "Mulige triggere")
-                                TriggerSelector(
-                                    customTriggers: profiles.first?.triggers ?? [],
-                                    selection: $draft.triggers,
-                                    onAddCustom: { draft.newCustomTriggers.append($0) }
-                                )
-                            }
                             VStack(alignment: .leading, spacing: 10) {
                                 SectionTitle(title: "Symptomer")
                                 OptionChips(options: HealthOptions.symptoms, selection: $draft.symptoms)
