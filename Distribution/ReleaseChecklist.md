@@ -2,18 +2,26 @@
 
 ## Release configuration
 
-- [ ] Marketing version is `1.0.0` and first build number is `1`.
-- [ ] App icon and distribution assets validate.
-- [ ] Privacy policy and support pages resolve over HTTPS.
+- [x] Marketing version is `1.0.0` and first build number is `1`.
+- [x] App icon and distribution assets validate.
+- [x] Privacy policy and support pages resolve over HTTPS.
 - [ ] `epilogg@haugentech.no` accepts and sends support mail.
 - [ ] App Privacy answers match `AppPrivacy.md` and the shipped build.
 - [ ] TestFlight description, test instructions and review notes are entered.
 
 ## Automated verification
 
-- [ ] Distribution validator passes for brand, site and release.
-- [ ] Unit and UI test suites pass on a supported iOS simulator.
-- [ ] Release build and archive validate without warnings requiring action.
+- [x] Distribution validator passes for brand, site and release.
+- [x] Unit and UI test suites pass on a supported iOS simulator.
+- [x] Release build succeeds and the local IPA export uses Apple Distribution signing.
+- [ ] Validate the archive in Xcode Organizer before uploading.
+
+## Verification evidence — 4 October 2026
+
+- Complete suite: 33 unit tests and 3 UI tests passed on iPhone 17 Pro / iOS 26.5.
+- Clean Release build and archive succeeded. Xcode emitted only the non-blocking App Intents metadata warning; the app does not use App Intents.
+- Local App Store Connect export succeeded as `1.0.0 (1)`. The IPA is signed with Apple Distribution and an App Store profile (`get-task-allow=false`). It has not been uploaded.
+- Privacy and support pages were fetched over HTTPS and returned the approved domain and support address.
 
 ## Manual test runs
 
