@@ -65,7 +65,7 @@ Bruk `Distribution/ReleaseChecklist.md` for fysisk enhetstesting og App Store Co
 - Stedsbibliotek med forslagene Hjemme, Jobb og Skole og mulighet for egne steder. Listen kan endres under **Profil → Dine steder** uten å endre tidligere anfall.
 - Registrering med tidspunkt, type og valgfri varighet. Sted velges i et alltid synlig **Hvor skjedde det?**-kort, ikke under ekstra detaljer.
 - Ett valgfritt sted per anfall, uten automatisk valg. Nye steder legges til i biblioteket når anfallet lagres. Inne-/utemiljø velges separat for hvert anfall, uten GPS.
-- Mulige triggere og andre valgfrie opplysninger under ekstra detaljer.
+- Mulige triggere vises i et eget kort ved anfallsregistrering, ved siden av sted og inne-/utemiljø. Symptomer og øvrige valgfrie opplysninger ligger under ekstra detaljer.
 - Anfallshistorikk med redigering, sletting og varige medisinøyeblikksbilder.
 - Dashboard for 7, 30 eller 90 dager, egendefinerte datoperioder, datofiltrering, mulige triggere og ukjente varigheter.
 - Lokal JSON-eksport, inkludert lagrede steder, og sletting av profil, medisiner og logg.

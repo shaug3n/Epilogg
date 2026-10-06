@@ -92,7 +92,6 @@ final class EpiLoggUITests: XCTestCase {
         app.buttons["place.option.Stua"].tap()
         app.buttons["seizure.environment.Ute"].tap()
         XCTAssertTrue(app.buttons["seizure.environment.Ute"].isSelected)
-        app.buttons["Legg til detaljer (valgfritt)"].tap()
         XCTAssertTrue(app.buttons["Nattarbeid"].waitForExistence(timeout: 5))
         app.buttons["Nattarbeid"].tap()
         app.buttons["seizure.save"].tap()
